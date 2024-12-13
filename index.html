@@ -1,19 +1,82 @@
 <!DOCTYPE html>
-<html lang="zh">
+<html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>秒表</title>
-    <link rel="stylesheet" href="style.css">
+    <style>
+        body {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+        }
+        .container {
+            text-align: center;
+        }
+        .button {
+            padding: 10px 20px;
+            font-size: 20px;
+            margin: 0 10px;
+        }
+    </style>
 </head>
 <body>
     <div class="container">
         <h1>秒表</h1>
-        <h1 id="display">00:00:00:000</h1>
+        <h2 id="display">00:00:00:000</h2>
         <button class="button" onclick="start()">开始</button>
         <button class="button" onclick="stop()">停止</button>
         <button class="button" onclick="reset()">重置</button>
     </div>
-    <script scr="script.js"></script>
+    <script>
+        let timer;
+        let running = false;
+        let milliseconds = 0;
+        let seconds = 0;
+        let minutes = 0;
+        let hours = 0;
+
+        function start() {
+            if (!running) {
+                timer = setInterval(updateTime, 10);
+                running = true;
+            }
+        }
+
+        function stop() {
+            clearInterval(timer);
+            running = false;
+        }
+
+        function reset() {
+            clearInterval(timer);
+            running = false;
+            milliseconds = 0;
+            seconds = 0;
+            minutes = 0;
+            hours = 0;
+            document.getElementById('display').innerText = '00:00:00:000';
+        }
+
+        function updateTime() {
+            milliseconds++;
+            if (milliseconds >= 100) {
+                milliseconds = 0;
+                seconds++;
+                if (seconds >= 60) {
+                    seconds = 0;
+                    minutes++;
+                    if (minutes >= 60) {
+                        minutes = 0;
+                        hours++;
+                    }
+                }
+            }
+            let display = `${hours < 10 ? '0' + hours : hours}:${minutes < 10 ? '0' + minutes : minutes}:${seconds < 10 ? '0' + seconds : seconds}:${milliseconds < 10 ? '00' + milliseconds : milliseconds < 100 ? '0' + milliseconds : milliseconds}`;
+            document.getElementById('display').innerText = display;
+        }
+    </script>
 </body>
 </html>
